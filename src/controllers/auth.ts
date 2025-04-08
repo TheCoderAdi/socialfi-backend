@@ -54,6 +54,11 @@ export const register = TryCatch(async (req, res, next) => {
   });
 });
 
+/**
+ * @desc Login a user
+ * @route POST /api/v1/auth/login
+ */
+
 export const login = TryCatch(async (req, res, next) => {
   const { email, password } = req.body ?? {};
 
@@ -83,6 +88,11 @@ export const login = TryCatch(async (req, res, next) => {
     statusCode: 200,
   });
 });
+
+/**
+ * @desc Logout a user
+ * @route GET /api/v1/auth/logout
+ */
 
 export const logout = TryCatch(async (req, res, next) => {
   res.cookie("token", "", {
