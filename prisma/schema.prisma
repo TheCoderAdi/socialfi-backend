@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  Int      @id @default(autoincrement())
+  username            String   @unique
+  email               String   @unique
+  password_hash       String
+  bio                 String
+  profile_picture_url String
+  created_at          DateTime @default(now())
+
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  following Follow[]  @relation("following")
+  followers Follow[]  @relation("followers")
+}
+
+model Post {
+  id         Int      @id @default(autoincrement())
+  image_url  String
+  caption    String
+  created_at DateTime @default(now())
+
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id])
+
+  comments Comment[]
+  likes    Like[]
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  text       String
+  created_at DateTime @default(now())
+
+  post_id Int
+  user_id Int
+
+  post Post @relation(fields: [post_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+
+  post_id Int
+  user_id Int
+
+  post Post @relation(fields: [post_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+
+  @@unique([post_id, user_id])
+}
+
+model Follow {
+  id Int @id @default(autoincrement())
+
+  follower_id  Int
+  following_id Int
+
+  follower  User @relation("followers", fields: [follower_id], references: [id])
+  following User @relation("following", fields: [following_id], references: [id])
+
+  @@unique([follower_id, following_id])
+}
