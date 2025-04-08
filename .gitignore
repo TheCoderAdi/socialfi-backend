@@ -1,3 +1,8 @@
 node_modules/
 dist/
 .env
+
+# Prisma
+prisma/dev.db
+prisma/.env
+prisma/migrations/**/README.md
