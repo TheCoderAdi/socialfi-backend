@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
     @throws {Error} - Throws an error if JWT_SECRET is not defined in the environment variables.
 */
 
-export const generateToken = (userId: number): string => {
+export const generateToken = (userId: string): string => {
   if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET is not defined");
   }
