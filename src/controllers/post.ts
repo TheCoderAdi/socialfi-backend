@@ -1,6 +1,5 @@
 import prisma from "../config/prisma";
 import { ErrorHandler, TryCatch } from "../utils/error";
-import { deleteFile } from "../utils/helper";
 
 /**
  * @description Create a new post
@@ -54,7 +53,6 @@ export const getPosts = TryCatch(async (req, res, next) => {
     include: {
       user: {
         select: {
-          id: true,
           username: true,
           profile_picture_url: true,
         },
@@ -63,14 +61,22 @@ export const getPosts = TryCatch(async (req, res, next) => {
         include: {
           user: {
             select: {
-              id: true,
               username: true,
               profile_picture_url: true,
             },
           },
         },
       },
-      likes: true,
+      likes: {
+        include: {
+          user: {
+            select: {
+              username: true,
+              profile_picture_url: true,
+            },
+          },
+        },
+      },
     },
     orderBy: {
       created_at: "desc",
@@ -107,7 +113,6 @@ export const getSinglePost = TryCatch(async (req, res, next) => {
     include: {
       user: {
         select: {
-          id: true,
           username: true,
           profile_picture_url: true,
         },
@@ -116,13 +121,22 @@ export const getSinglePost = TryCatch(async (req, res, next) => {
         include: {
           user: {
             select: {
-              id: true,
               username: true,
+              profile_picture_url: true,
             },
           },
         },
       },
-      likes: true,
+      likes: {
+        include: {
+          user: {
+            select: {
+              username: true,
+              profile_picture_url: true,
+            },
+          },
+        },
+      },
     },
   });
 
