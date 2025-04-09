@@ -29,10 +29,11 @@ app.get("/", (req, res) => {
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/user";
 import postRoutes from "./routes/post";
+import commentRoutes from "./routes/comment";
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/posts", postRoutes);
+app.use("/api/v1/posts", postRoutes).use("/api/v1/posts", commentRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);
