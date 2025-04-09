@@ -20,7 +20,7 @@ export const createPost = TryCatch(async (req, res, next) => {
       id: uuidv4(),
       caption,
       image_url,
-      user_id: req?.user?.id!,
+      user_id: req?.user?.id as string,
     },
   });
 

@@ -203,7 +203,7 @@ export const followUser = TryCatch(async (req, res, next) => {
   const follow = await prisma.follow.create({
     data: {
       id: uuidv4(),
-      follower_id: req.user?.id!,
+      follower_id: req.user?.id as string,
       following_id: id,
     },
   });

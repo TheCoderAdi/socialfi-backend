@@ -40,7 +40,7 @@ export const likePost = TryCatch(async (req, res, next) => {
     data: {
       id: uuidv4(),
       post_id: id,
-      user_id: req.user?.id!,
+      user_id: req.user?.id as string,
     },
   });
 

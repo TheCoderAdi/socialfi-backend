@@ -34,7 +34,7 @@ export const addComment = TryCatch(async (req, res, next) => {
       id: uuidv4(),
       text,
       post_id: id,
-      user_id: req.user?.id!,
+      user_id: req.user?.id as string,
     },
   });
 
