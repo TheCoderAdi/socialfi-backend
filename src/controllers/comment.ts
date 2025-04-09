@@ -4,7 +4,7 @@ import { ErrorHandler, TryCatch } from "../utils/error";
 
 /**
  * @description Add a comment to a post
- * @route POST /api/posts/:id/comments
+ * @route POST /api/v1/posts/:id/comments
  */
 export const addComment = TryCatch(async (req, res, next) => {
   const { id } = req.params;
@@ -45,7 +45,7 @@ export const addComment = TryCatch(async (req, res, next) => {
 
 /**
  * @description Get all comments for a post
- * @route GET /api/posts/:id/comments
+ * @route GET /api/v1/posts/:id/comments
  */
 
 export const getComments = TryCatch(async (req, res, next) => {
