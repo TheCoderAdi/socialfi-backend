@@ -20,6 +20,41 @@ export const getUserProfile = TryCatch(async (req, res, next) => {
     omit: {
       password_hash: true,
     },
+    include: {
+      posts: {
+        include: {
+          likes: true,
+          comments: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      followers: {
+        include: {
+          follower: {
+            omit: {
+              password_hash: true,
+            },
+          },
+        },
+      },
+      following: {
+        include: {
+          following: {
+            omit: {
+              password_hash: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   if (!user) {
