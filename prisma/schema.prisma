@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id                  Int      @id @default(autoincrement())
+  id                  String   @id
   username            String   @unique
   email               String   @unique
   password_hash       String
@@ -24,35 +24,35 @@ model User {
 }
 
 model Post {
-  id         Int      @id @default(autoincrement())
+  id         String   @id
   image_url  String
   caption    String
   created_at DateTime @default(now())
 
-  user_id Int
-  user    User @relation(fields: [user_id], references: [id])
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
 
   comments Comment[]
   likes    Like[]
 }
 
 model Comment {
-  id         Int      @id @default(autoincrement())
+  id         String   @id
   text       String
   created_at DateTime @default(now())
 
-  post_id Int
-  user_id Int
+  post_id String
+  user_id String
 
   post Post @relation(fields: [post_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
 }
 
 model Like {
-  id Int @id @default(autoincrement())
+  id String @id
 
-  post_id Int
-  user_id Int
+  post_id String
+  user_id String
 
   post Post @relation(fields: [post_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
@@ -61,10 +61,10 @@ model Like {
 }
 
 model Follow {
-  id Int @id @default(autoincrement())
+  id String @id
 
-  follower_id  Int
-  following_id Int
+  follower_id  String
+  following_id String
 
   follower  User @relation("followers", fields: [follower_id], references: [id])
   following User @relation("following", fields: [following_id], references: [id])
