@@ -65,6 +65,7 @@ export const getPosts = TryCatch(async (req, res, next) => {
             select: {
               id: true,
               username: true,
+              profile_picture_url: true,
             },
           },
         },
