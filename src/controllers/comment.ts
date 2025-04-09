@@ -1,4 +1,5 @@
 import prisma from "../config/prisma";
+import { v4 as uuidv4 } from "uuid";
 
 import { ErrorHandler, TryCatch } from "../utils/error";
 
@@ -20,7 +21,7 @@ export const addComment = TryCatch(async (req, res, next) => {
 
   const post = await prisma.post.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
   });
 
@@ -30,9 +31,10 @@ export const addComment = TryCatch(async (req, res, next) => {
 
   const comment = await prisma.comment.create({
     data: {
+      id: uuidv4(),
       text,
-      post_id: Number(id),
-      user_id: req.user?.id as number,
+      post_id: id,
+      user_id: req.user?.id!,
     },
   });
 
@@ -57,7 +59,7 @@ export const getComments = TryCatch(async (req, res, next) => {
 
   const post = await prisma.post.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
   });
 
@@ -67,7 +69,7 @@ export const getComments = TryCatch(async (req, res, next) => {
 
   const comments = await prisma.comment.findMany({
     where: {
-      post_id: Number(id),
+      post_id: id,
     },
     include: {
       user: {

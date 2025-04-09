@@ -1,4 +1,6 @@
 import prisma from "../config/prisma";
+import { v4 as uuidv4 } from "uuid";
+
 import { ErrorHandler, TryCatch } from "../utils/error";
 
 /**
@@ -15,9 +17,10 @@ export const createPost = TryCatch(async (req, res, next) => {
   const image_url = req.file.filename;
   const post = await prisma.post.create({
     data: {
+      id: uuidv4(),
       caption,
       image_url,
-      user_id: req?.user?.id as number,
+      user_id: req?.user?.id!,
     },
   });
 
@@ -35,7 +38,7 @@ export const createPost = TryCatch(async (req, res, next) => {
 export const getPosts = TryCatch(async (req, res, next) => {
   const following = await prisma.follow.findMany({
     where: {
-      follower_id: req.user?.id as number,
+      follower_id: req.user?.id,
     },
     select: {
       following_id: true,
@@ -108,7 +111,7 @@ export const getSinglePost = TryCatch(async (req, res, next) => {
 
   const post = await prisma.post.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
     include: {
       user: {
@@ -164,7 +167,7 @@ export const deletePost = TryCatch(async (req, res, next) => {
 
   let userWithPost = await prisma.post.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
   });
 
@@ -172,13 +175,13 @@ export const deletePost = TryCatch(async (req, res, next) => {
     return next(new ErrorHandler("Post not found", 404));
   }
 
-  if (userWithPost.user_id !== (req.user?.id as number)) {
+  if (userWithPost.user_id !== req.user?.id) {
     return next(new ErrorHandler("You are not authorized to delete this post", 403));
   }
 
   const post = await prisma.post.delete({
     where: {
-      id: Number(id),
+      id: id,
     },
   });
 

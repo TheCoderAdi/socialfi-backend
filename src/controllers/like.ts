@@ -1,4 +1,5 @@
 import prisma from "../config/prisma";
+import { v4 as uuidv4 } from "uuid";
 
 import { TryCatch } from "../utils/error";
 import { ErrorHandler } from "../utils/error";
@@ -16,7 +17,7 @@ export const likePost = TryCatch(async (req, res, next) => {
 
   const post = await prisma.post.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
   });
 
@@ -26,8 +27,8 @@ export const likePost = TryCatch(async (req, res, next) => {
 
   const alreadyLiked = await prisma.like.findFirst({
     where: {
-      post_id: Number(id),
-      user_id: req.user?.id as number,
+      post_id: id,
+      user_id: req.user?.id,
     },
   });
 
@@ -37,8 +38,9 @@ export const likePost = TryCatch(async (req, res, next) => {
 
   const like = await prisma.like.create({
     data: {
-      post_id: Number(id),
-      user_id: req.user?.id as number,
+      id: uuidv4(),
+      post_id: id,
+      user_id: req.user?.id!,
     },
   });
 
@@ -63,7 +65,7 @@ export const unlikePost = TryCatch(async (req, res, next) => {
 
   const post = await prisma.post.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
   });
 
@@ -73,8 +75,8 @@ export const unlikePost = TryCatch(async (req, res, next) => {
 
   const alreadyDisLiked = await prisma.like.findFirst({
     where: {
-      post_id: Number(id),
-      user_id: req.user?.id as number,
+      post_id: id,
+      user_id: req.user?.id,
     },
   });
 
@@ -84,8 +86,8 @@ export const unlikePost = TryCatch(async (req, res, next) => {
 
   const unlike = await prisma.like.deleteMany({
     where: {
-      post_id: Number(id),
-      user_id: req.user?.id as number,
+      post_id: id,
+      user_id: req.user?.id,
     },
   });
 

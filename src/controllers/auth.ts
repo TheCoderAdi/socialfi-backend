@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import prisma from "../config/prisma";
+import { v4 as uuidv4 } from "uuid";
 
 import { ErrorHandler, TryCatch } from "../utils/error";
 import { sendToken } from "../utils/sendToken";
@@ -38,6 +39,7 @@ export const register = TryCatch(async (req, res, next) => {
 
   const user = await prisma.user.create({
     data: {
+      id: uuidv4(),
       username,
       email,
       password_hash,
