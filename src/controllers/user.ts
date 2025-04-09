@@ -1,5 +1,5 @@
 import prisma from "../config/prisma";
-import { v4 as uuidv4, v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 import { ErrorHandler, TryCatch } from "../utils/error";
 import { deleteFile } from "../utils/helper";
