@@ -125,6 +125,7 @@ npm run dev
 - `GET /users/:id/following` – List following
 - `POST /users/:id/follow` – Follow user
 - `POST /users/:id/unfollow` – Unfollow user
+- `DELETE /users/:id`- Delete user
 
 ---
 
@@ -156,3 +157,17 @@ npm run dev
 Uploaded images can be accessed via:
 
 - `GET /uploads/<filename>`
+
+## GraphQL Support
+
+This project also includes **GraphQL** support for flexible user profile management using Apollo Server and Express.
+
+#### Queries
+
+- `fetchProfile(id: ID!): User` – Get a user's profile by ID.
+
+#### Mutations
+
+- `createUser(input: CreateUserInput!): CreateUserResponse` – Register a new user.
+- `updateUser(input: UpdateUserInput!): User` – Update user profile fields.
+- `deleteUser: DeleteUserResponse` – Delete the currently authenticated user.
