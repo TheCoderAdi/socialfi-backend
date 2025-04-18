@@ -115,6 +115,46 @@ export const updateProfile = TryCatch(async (req, res, next) => {
 });
 
 /**
+ * @desc Delete User Profile
+ * @route DELETE /api/v1/users/:id
+ */
+
+export const deleteProfile = TryCatch(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (id !== req.user?.id) {
+    return next(new ErrorHandler("You can only delete your own profile", 403));
+  }
+
+  if (req.user?.profile_picture_url) {
+    const oldImage = "src/uploads/" + req.user?.profile_picture_url;
+    if (oldImage) {
+      deleteFile(oldImage);
+    }
+  }
+
+  if (req.user.photos.length > 0) {
+    req.user.photos.forEach((photo) => {
+      const oldImage = "src/uploads/" + photo;
+      if (oldImage) {
+        deleteFile(oldImage);
+      }
+    });
+  }
+
+  await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Profile deleted successfully",
+  });
+});
+
+/**
  * @desc Get User Followers
  * @route GET /api/v1/users/:id/followers
  */
