@@ -1,9 +1,11 @@
 import prisma from "../config/prisma";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
+import fs from "fs";
 
 import { ErrorHandler, TryCatch } from "../utils/error";
 import { deleteFile } from "../utils/helper";
+import { saveAndEncryptFile } from "../utils/encrypt-decrypt";
 
 /**
  * @desc Get User Profile
@@ -103,28 +105,39 @@ export const updateProfile = TryCatch(async (req, res, next) => {
   if (geo_location) data.geo_location = geo_location;
   if (hometown) data.hometown = hometown;
 
-  let profile_picture_url = req.user.profile_picture_url;
-  if (Array.isArray(req.files) && req.files[0]) {
-    if (profile_picture_url) {
-      const oldPath = path.join("src/uploads", profile_picture_url);
-      deleteFile(oldPath);
-    }
-    data.profile_picture_url = req.files[0].filename;
-  }
+  const files = req.files as Express.Multer.File[];
 
-  let photos = req.user.photos;
+  if (Array.isArray(files) && files.length > 0) {
+    let encryptedFiles: string[] = [];
 
-  if (Array.isArray(req.files) && req.files.length > 1) {
-    const newPhotoFiles = req.files.slice(1).map((file) => file.filename);
+    for (const file of files) {
+      const fileStream = fs.createReadStream(file.path);
+      const encryptedPath = await saveAndEncryptFile(fileStream, file.filename);
+      encryptedFiles.push(path.basename(encryptedPath));
 
-    if (photos.length > 0) {
-      photos.forEach((photo) => {
-        const photoPath = path.join("src/uploads", photo);
-        deleteFile(photoPath);
-      });
+      fs.unlinkSync(file.path);
     }
 
-    data.photos = newPhotoFiles;
+    // First file is profile picture
+    const [profilePic, ...photoGallery] = encryptedFiles;
+
+    if (profilePic) {
+      if (req.user.profile_picture_url) {
+        const oldPath = path.join("src/uploads", req.user.profile_picture_url);
+        deleteFile(oldPath);
+      }
+      data.profile_picture_url = profilePic;
+    }
+
+    if (photoGallery.length > 0) {
+      if (req.user.photos.length > 0) {
+        req.user.photos.forEach((photo) => {
+          const photoPath = path.join("src/uploads", photo);
+          deleteFile(photoPath);
+        });
+      }
+      data.photos = photoGallery;
+    }
   }
 
   const user = await prisma.user.update({
