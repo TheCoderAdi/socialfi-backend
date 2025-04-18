@@ -142,7 +142,7 @@ export const login = TryCatch(async (req, res, next) => {
  * @route GET /api/v1/auth/logout
  */
 
-export const logout = TryCatch(async (req, res, next) => {
+export const logout = TryCatch(async (req, res) => {
   res.cookie("token", "", {
     expires: new Date(Date.now()),
     secure: process.env.NODE_ENV === "development" ? false : true,
