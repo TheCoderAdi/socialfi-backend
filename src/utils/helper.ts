@@ -11,3 +11,14 @@ export const deleteFile = (filePath: string) => {
     if (err) console.error("Failed to delete file:", err);
   });
 };
+
+/**
+ * Generates a random username based on the provided name.
+ * @param name - The name to base the username on.
+ * @returns A random username.
+ */
+export const generateUsername = (name: string) => {
+  const baseUsername = name.split(" ")[0].toLowerCase();
+  const randomSuffix = Math.floor(Math.random() * 1000);
+  return `${baseUsername}${randomSuffix}`;
+};
