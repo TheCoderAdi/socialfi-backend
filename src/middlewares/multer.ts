@@ -12,7 +12,7 @@ const diskStorage = multer.diskStorage({
   },
 });
 
-const profilePicture = multer({ storage: diskStorage }).single("profilePicture");
+const files = multer({ storage: diskStorage }).array("file", 6);
 const postImage = multer({ storage: diskStorage }).single("postImage");
 
-export { profilePicture, postImage };
+export { files, postImage };
